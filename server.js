@@ -12,12 +12,12 @@ function delay(duration){
 
 
 app.get('/',(req, res)=>{
-    res.send("performance example");
+    res.send(`performance example: ${process.pid}`);
 })
 
 app.get("/timer",(req,res)=>{
     delay(9000);
-    res.send("ding ding ding ...")
+    res.send(`ding ding ding ... ${process.pid}`);
 })
 
 if(cluster.isMaster){
