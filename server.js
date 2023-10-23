@@ -1,10 +1,9 @@
 const express = require("express");
-const cluster = require("cluster");
+const cluster = require("node:cluster");
 const app = express();
 
 function delay(duration) {
   const startTime = Date.now();
-  console.log(startTime);
   while (Date.now() - startTime < duration) {
     // event loop is blocked...
   }
@@ -21,11 +20,13 @@ app.get("/timer", (req, res) => {
 
 console.log("running server.js");
 
-if (cluster.isMaster) {
-  console.log("master process is started");
+if (cluster.isPrimary) {
+  console.log(`Primary ${process.pid} is running`);
   cluster.fork();
+
+  
   cluster.fork();
 } else {
-  console.log("worker has been started ..");
+  console.log(`worker has been started...  ${process.pid}`);
   app.listen(3000);
 }
