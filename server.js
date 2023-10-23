@@ -1,5 +1,7 @@
 const express = require("express");
 const cluster = require("node:cluster");
+const os = require("node:os");
+// const numCPUs = require("node:os").availableParallelism(); (new approach)
 const app = express();
 
 function delay(duration) {
@@ -22,10 +24,11 @@ console.log("running server.js");
 
 if (cluster.isPrimary) {
   console.log(`Primary ${process.pid} is running`);
-  cluster.fork();
-
-  
-  cluster.fork();
+  const NUM_WORKERS = os.cpus().length;
+  //   console.log(numCPUs);
+  for (let i = 0; i < NUM_WORKERS; i++) {
+    cluster.fork();
+  }
 } else {
   console.log(`worker has been started...  ${process.pid}`);
   app.listen(3000);
